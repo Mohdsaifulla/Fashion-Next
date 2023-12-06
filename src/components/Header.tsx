@@ -1,10 +1,14 @@
+'use client'
 import Container from "./Container";
 import Logo from "./Logo";
 import { IoSearchOutline } from "react-icons/io5";
 import { FaRegUser } from "react-icons/fa";
 import { BsCart4 } from "react-icons/bs";
+import { useSession, signIn, signOut } from "next-auth/react"
 
 const Header = () => {
+  const { data: session } = useSession()
+  console.log(session)
   return (
     <div className="bg-bodyColor h-20 top-0 sticky z-50">
       <Container className="h-full flex items-center md:gap-x-5 justify-between md:justify-start mx-3">
@@ -20,7 +24,7 @@ const Header = () => {
           />
         </div>
         {/* login */}
-        <div className="headerDiv m-2">
+        <div className="headerDiv m-2" onClick={()=>signIn()}>
           <FaRegUser className="text-xl" />
           <p className="text-sm font-semibold p-1">Login</p>
         </div>
