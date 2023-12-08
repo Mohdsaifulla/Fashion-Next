@@ -1,8 +1,10 @@
+import Banner from "@/components/Banner"
+
 const page = () => {
 
   return (
     <main>
-      ok that is fine and
+      <Banner/>
     </main>
   )
 }
