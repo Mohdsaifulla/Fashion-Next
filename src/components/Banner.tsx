@@ -5,12 +5,15 @@ import Image from "next/image";
 import bannerone from "@/images/banner-1.jpg"
 import bannertwo from "@/images/banner-2.jpg"
 import bannerthree from "@/images/banner-3.jpg"
+import BannerText from "./BannerText";
 const Banner = () => {
+
+
   var settings = {
-    dots: false,
+    dots: true,
     infinite: true,
     autoplay:true,
-    arrows:true,
+    arrows:false,
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
@@ -21,16 +24,19 @@ const Banner = () => {
   
 
   return (
-    <div className="relative px-6">
+    <div className="relative px-8">
     <Slider {...settings}>
-    <div className="">
+    <div className="relative">
       <Image src={bannerone} alt="banner-1"  className="w-full h-full relative"  />
+      <BannerText title='Outfit For Everyone'/>
       </div>
-      <div className="">
+      <div className="relative">
       <Image src={bannertwo} alt="banner-1" className="w-full h-full relative overflow-hidden object-contain" />
+      <BannerText title='Outfit For Everyone'/>
       </div>
-      <div className="">
+      <div className="relative">
       <Image src={bannerthree} alt="banner-1" className="w-full h-full relative" />
+      <BannerText title='Outfit For Everyone'/>
       </div>
 
     </Slider>
