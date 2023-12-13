@@ -7,3 +7,7 @@ if (!res.ok) {
  
   return res.json()
 }
+
+export const calculatedPercentage=(price:any,oldPrice:any)=>{
+  return ((parseFloat(oldPrice)-parseFloat(price))/(oldPrice)*100).toFixed(0)
+}
