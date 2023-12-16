@@ -1,4 +1,4 @@
-export interface products{
+export interface Products{
     _id:number,
     title:string,
     isNew:boolean,
@@ -10,6 +10,6 @@ export interface products{
     rating:number,
 }
 
-export interface productProps{
-    item:products
+export interface ProductProps{
+    item:Products
 }

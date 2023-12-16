@@ -1,12 +1,13 @@
 import React from "react";
-import { productProps } from "../../type";
+import { ProductProps } from "../../type";
 import Image from "next/image";
 import { calculatedPercentage } from "@/fetchData";
 import FormattedPrice from "./FormattedPrice";
 import { CiStar } from "react-icons/ci";
 import Link from "next/link";
 
-const ProductsPage = ({ item }: productProps) => {
+const ProductsPage = ({ item }: ProductProps) => {
+
   const starArray = Array.from({ length: item?.rating }, (_, index) => (
     <span className="text-yellow-400" key={index}>
       <CiStar />
@@ -21,7 +22,7 @@ const ProductsPage = ({ item }: productProps) => {
           <Image
             src={item.image}
             height={500}
-            width={500}
+            width={500} 
             alt="Product"
             className="w-full h-full object-cover group-hover:scale-110 duration-200 rounded-lg"
           />
