@@ -8,9 +8,10 @@ import { useSession, signIn, signOut } from "next-auth/react";
 import { IoMdLogOut } from "react-icons/io";
 import { Image } from "next/dist/client/image-component";
 import { useState } from "react";
+import Link from "next/link";
 const Header = () => {
   const { data: session } = useSession();
-  console.log(session);
+  // console.log(session);
   const [isHovering, setIsHovering] = useState(false);
   return (
     <div className="bg-bodyColor h-20 top-0 sticky z-50 px-4">
@@ -73,13 +74,19 @@ const Header = () => {
           </div>
         )}
         {/* cart */}
+        <Link href={"/cart"}>
+
         <div className="bg-black hover:bg-white rounded-full text-slate-100 hover:text-black flex items-center justify-center gap-x-1 px-3 py-1.5 border-[1px] border-black hover:border-orange-600 duration-200 relative  cursor-pointer group">
+
           <BsCart4 className="text-xl" />
           <p className="text-sm font-semibold p-1 ">$200</p>
           <span className="bg-white text-red-700 rounded-full text-xs font-bold absolute -right-2 -top-1 w-5 h-5 flex items-center justify-center shadow-xl shadow-black border-1">
             10
           </span>
+
         </div>
+        </Link>
+
       </Container>
     </div>
   );

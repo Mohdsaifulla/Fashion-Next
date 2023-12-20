@@ -3,20 +3,31 @@ import { getProducts } from "@/fetchData";
 import React from "react";
 import { Products } from "../../../type";
 import SingleProduct from "@/components/SingleProduct";
-type Props = {
-  searchParams: {
-    _id:string |string[]
-  };
+
+type ProductSearchParams = {
+  [_id:string]: number;
+  // title: string;
+  // isNew: string;
+  // oldPrice: string;
+  // price: string;
+  // description: string;
+  // category: string;
+  // image: string;
+  // rating: string;
 };
 
-const Product = async (searchParam: Props) => {
-  const idString=searchParam.searchParams._id;
-  const _id = Number(idString);
-  // console.log(_id)
+type Props = {
+  searchParams:  ProductSearchParams;
+};
+
+const Product = async (searchParams: Props) => {
+  console.log(searchParams);
+
   const otherProducts = await getProducts();
   return (
     <div>
-      <SingleProduct />
+      <SingleProduct/>
+      <div>{searchParams.searchParams.title}</div>
       <div>
         <p>Our Other Products</p>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 mt-10 items-center justify-center px-6 ">
