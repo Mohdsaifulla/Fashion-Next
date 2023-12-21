@@ -7,12 +7,28 @@ import { BsCart4 } from "react-icons/bs";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { IoMdLogOut } from "react-icons/io";
 import { Image } from "next/dist/client/image-component";
-import { useState } from "react";
+import { PropsWithChildren, useEffect, useState } from "react";
 import Link from "next/link";
+import type { RootState } from "@/reduxToolkit/store";
+import { useDispatch, useSelector } from "react-redux";
+import FormattedPrice from "./FormattedPrice";
+import { ProductWithQuant } from "../../type";
 const Header = () => {
+  const { productData } = useSelector((state: RootState) => state.fashion);
   const { data: session } = useSession();
-  // console.log(session);
+  console.log(productData);
   const [isHovering, setIsHovering] = useState(false);
+  const [totalAmt, setTotalAmt] = useState(0);
+
+  useEffect(() => {
+    let amt = 0;
+    productData.map((item: ProductWithQuant) => {
+      amt += item.price * item.quantity;
+      return;
+    });
+    setTotalAmt(amt);
+  }, [productData]);
+
   return (
     <div className="bg-bodyColor h-20 top-0 sticky z-50 px-4">
       <Container className="h-full flex items-center md:gap-x-5 justify-between md:justify-start mx-3 relative">
@@ -75,18 +91,16 @@ const Header = () => {
         )}
         {/* cart */}
         <Link href={"/cart"}>
-
-        <div className="bg-black hover:bg-white rounded-full text-slate-100 hover:text-black flex items-center justify-center gap-x-1 px-3 py-1.5 border-[1px] border-black hover:border-orange-600 duration-200 relative  cursor-pointer group">
-
-          <BsCart4 className="text-xl" />
-          <p className="text-sm font-semibold p-1 ">$200</p>
-          <span className="bg-white text-red-700 rounded-full text-xs font-bold absolute -right-2 -top-1 w-5 h-5 flex items-center justify-center shadow-xl shadow-black border-1">
-            10
-          </span>
-
-        </div>
+          <div className="bg-black hover:bg-white rounded-full text-slate-100 hover:text-black flex items-center justify-center gap-x-1 px-3 py-1.5 border-[1px] border-black hover:border-orange-600 duration-200 relative  cursor-pointer group">
+            <BsCart4 className="text-xl" />
+            <p className="text-sm font-semibold p-1 ">
+              <FormattedPrice amount={totalAmt} />
+            </p>
+            <span className="bg-white text-red-700 rounded-full text-xs font-bold absolute -right-2 -top-1 w-5 h-5 flex items-center justify-center shadow-xl shadow-black border-1">
+              {productData.length}
+            </span>
+          </div>
         </Link>
-
       </Container>
     </div>
   );
