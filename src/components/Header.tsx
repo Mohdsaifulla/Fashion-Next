@@ -13,12 +13,28 @@ import type { RootState } from "@/reduxToolkit/store";
 import { useDispatch, useSelector } from "react-redux";
 import FormattedPrice from "./FormattedPrice";
 import { ProductWithQuant } from "../../type";
+import { userInfoAdded,deleteUserInfo } from "@/reduxToolkit/storeSlice";
 const Header = () => {
   const { productData } = useSelector((state: RootState) => state.fashion);
+  const dispatch=useDispatch()
   const { data: session } = useSession();
-  console.log(productData);
+  // console.log(productData);
   const [isHovering, setIsHovering] = useState(false);
   const [totalAmt, setTotalAmt] = useState(0);
+
+  useEffect(()=>{
+    if(session){
+      dispatch(
+        userInfoAdded({
+          name:session?.user?.name,
+          email:session?.user?.email,
+          image:session?.user?.image,
+        })
+      )
+    }else{
+      dispatch(deleteUserInfo())
+    }
+  },[session,dispatch])
 
   useEffect(() => {
     let amt = 0;
@@ -28,7 +44,7 @@ const Header = () => {
     });
     setTotalAmt(amt);
   }, [productData]);
-
+ 
   return (
     <div className="bg-bodyColor h-20 top-0 sticky z-50 px-4">
       <Container className="h-full flex items-center md:gap-x-5 justify-between md:justify-start mx-3 relative">

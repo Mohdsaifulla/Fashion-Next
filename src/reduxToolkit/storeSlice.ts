@@ -30,29 +30,34 @@ export const storeSlice = createSlice({
       const existingItem = state.productData.find(
         (item: ProductWithQuant) => item._id === action.payload._id
       );
-      if(existingItem){
-        existingItem.quantity+=1
+      if (existingItem) {
+        existingItem.quantity += 1;
       }
     },
 
     decreaseQuant: (state, action) => {
- const existingItem = state.productData.find(
+      const existingItem = state.productData.find(
         (item: ProductWithQuant) => item._id === action.payload._id
       );
-      if(existingItem){
-        if(existingItem.quantity===1){
-          existingItem.quantity=1
-        }else{
-          existingItem.quantity-=1
-
+      if (existingItem) {
+        if (existingItem.quantity === 1) {
+          existingItem.quantity = 1;
+        } else {
+          existingItem.quantity -= 1;
         }
       }
     },
     deleteOneItem: (state, action) => {
-      state.productData.splice(action.payload._id,1);
+      state.productData.splice(action.payload._id, 1);
     },
     removeAllItem: (state) => {
-      state.productData=[]
+      state.productData = [];
+    },
+    userInfoAdded: (state, action) => {
+      state.loginDetails = action.payload;
+    },
+    deleteUserInfo: (state) => {
+      state.loginDetails = null;
     },
   },
 });
@@ -62,5 +67,7 @@ export const {
   decreaseQuant,
   deleteOneItem,
   removeAllItem,
+  userInfoAdded,
+  deleteUserInfo,
 } = storeSlice.actions;
 export default storeSlice.reducer;
