@@ -42,7 +42,7 @@ const ProductsPage = ({ item }: ProductProps) => {
               height={500}
               width={500}
               alt="Product"
-              className="w-full h-full object-cover group-hover:scale-110 duration-200 rounded-lg"
+              className="w-full h-full object-cover group-hover:scale-110 duration-200 rounded-lg priority"
             />
 
             {item?.isNew && (
