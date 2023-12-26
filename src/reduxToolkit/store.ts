@@ -10,8 +10,31 @@ import {
   PURGE,
   REGISTER,
 } from "redux-persist";
-import storage from "redux-persist/lib/storage";
+// import storage from "redux-persist/lib/storage";
 import { PersistGate } from "redux-persist/integration/react";
+import createWebStorage from "redux-persist/es/storage/createWebStorage";
+import { WebStorage } from "redux-persist/es/types";
+
+export function createPersistWebStorage() {
+  const isServer=typeof window ==='undefined'
+  if(isServer){
+    return{
+      getItem(){
+        return Promise.resolve(null)
+      },
+      setItem(){
+        return Promise.resolve()
+      },
+      removeItem(){
+        return Promise.resolve()
+      }
+    }
+  }
+  return createWebStorage('local')
+}
+
+const storage=typeof window!=='undefined'?createWebStorage('local'):createPersistWebStorage()
+ 
 const persistConfig = {
   key: "root",
   version: 1,
