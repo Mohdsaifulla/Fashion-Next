@@ -4,12 +4,15 @@ import { useDispatch, useSelector } from "react-redux";
 
 import FormattedPrice from "./FormattedPrice";
 import { useEffect, useState } from "react";
-
+import { loadStripe } from "@stripe/stripe-js";
 import { useSession } from "next-auth/react";
 import type { RootState } from "@/reduxToolkit/store";
-  import { ProductWithQuant } from "../../type";
+import { ProductWithQuant } from "../../type";
+import { resetOrder, saveOrder } from "@/reduxToolkit/storeSlice";
 const PaymentForm = () => {
-  const { productData,loginDetails } = useSelector((state: RootState) => state.fashion);
+  const { productData, loginDetails } = useSelector(
+    (state: RootState) => state.fashion
+  );
   const dispatch = useDispatch();
 
   const [totalAmt, setTotalAmt] = useState(0);
@@ -21,6 +24,28 @@ const PaymentForm = () => {
     });
     setTotalAmt(amt);
   }, [productData]);
+  const { data: session } = useSession();
+  const stripePromise = loadStripe(
+    process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
+  );
+
+  const handleCheckout = async () => {
+    const response = await fetch("http://localhost:3000/api/checkout", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        items: productData,
+        email: session?.user?.email,
+      }),
+    });
+    const data=await response.json()
+    if(response.ok){
+    console.log(data)
+    await dispatch(saveOrder({order:productData,id:data.id}))
+    stripe?.redirectToCheckout({sessionId:data.id})
+    dispatch(resetOrder())
+    }
+  };
   return (
     <div className="w-full bg-white p-4">
       <h2>Cart Totals</h2>
@@ -50,7 +75,7 @@ const PaymentForm = () => {
       </div>
       {loginDetails ? (
         <button
-         
+          onClick={handleCheckout}
           className="bg-black text-slate-100 mt-4 py-3 px-6 hover:bg-orange-950 cursor-pointer duration-200"
         >
           Proceed to checkout

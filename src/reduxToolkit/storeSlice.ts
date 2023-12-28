@@ -1,15 +1,18 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { ProductWithQuant } from "../../type";
+import { steps } from "framer-motion";
 
 interface productState {
   productData: ProductWithQuant[];
   loginDetails: null | string;
+  orderData:[]
 }
 
 const initialState: productState = {
   productData: [],
   loginDetails: null,
+  orderData:[]
 };
 
 export const storeSlice = createSlice({
@@ -59,6 +62,12 @@ export const storeSlice = createSlice({
     deleteUserInfo: (state) => {
       state.loginDetails = null;
     },
+    saveOrder:(state,action)=>{
+      state.orderData=action.payload
+    },
+    resetOrder:(state)=>{
+      state.orderData=[]
+    }
   },
 });
 export const {
@@ -69,5 +78,6 @@ export const {
   removeAllItem,
   userInfoAdded,
   deleteUserInfo,
+  saveOrder,resetOrder
 } = storeSlice.actions;
 export default storeSlice.reducer;
