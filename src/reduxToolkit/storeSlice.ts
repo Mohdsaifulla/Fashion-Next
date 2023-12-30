@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { ProductWithQuant } from "../../type";
-import { steps } from "framer-motion";
+
 
 interface productState {
   productData: ProductWithQuant[];

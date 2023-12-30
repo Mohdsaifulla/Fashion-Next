@@ -1,23 +1,44 @@
 import { NextResponse, NextRequest } from "next/server";
+import { ProductWithQuant } from "../../../../type";
 import Stripe from "stripe";
 
-
-export async function POST(req: NextRequest) {
-  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-    typescript: true,
-  });
-  
+export const POST = async (request: NextRequest) => {
+  // @ts-ignore
+  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
   try {
-    const reqBody = await req.json();
-    const{items,email}=await reqBody
+    const reqBody = await request.json();
+    const { items, email } = await reqBody;
+
+    const extractingItems = await items.map((item: ProductWithQuant) => ({
+      quantity: item.quantity,
+      price_data: {
+        currency: "usd",
+        unit_amount: item.price * 100,
+        product_data: {
+          name: item.title,
+          description: item.description,
+          images: [item.image],
+        },
+      },
+    }));
+
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ["card"],
+      line_items: extractingItems,
+      mode: "payment",
+      success_url: `${process.env.NEXTAUTH_URL}/success`,
+      cancel_url: `${process.env.NEXTAUTH_URL}/checkout`,
+      metadata: {
+        email,
+      },
+    });
+
     return NextResponse.json({
-      message: "Connetion is Active",
+      message: "Connection is Active!",
       success: true,
-      reqBody,
+      id: session.id,
     });
   } catch (error: any) {
-    return new NextResponse(error, {
-      status: 400,
-    });
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
-}
+};

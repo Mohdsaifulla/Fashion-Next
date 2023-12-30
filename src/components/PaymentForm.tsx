@@ -1,20 +1,17 @@
 "use client";
 
 import { useDispatch, useSelector } from "react-redux";
-
+import { ProductWithQuant } from "../../type";
 import FormattedPrice from "./FormattedPrice";
 import { useEffect, useState } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import { useSession } from "next-auth/react";
+import { saveOrder,resetOrder} from "@/reduxToolkit/storeSlice";
 import type { RootState } from "@/reduxToolkit/store";
-import { ProductWithQuant } from "../../type";
-import { resetOrder, saveOrder } from "@/reduxToolkit/storeSlice";
 const PaymentForm = () => {
-  const { productData, loginDetails } = useSelector(
-    (state: RootState) => state.fashion
-  );
   const dispatch = useDispatch();
 
+  const { productData,loginDetails  } = useSelector((state: RootState) => state.fashion);
   const [totalAmt, setTotalAmt] = useState(0);
   useEffect(() => {
     let amt = 0;
@@ -24,12 +21,14 @@ const PaymentForm = () => {
     });
     setTotalAmt(amt);
   }, [productData]);
-  const { data: session } = useSession();
+
+  // =============  Stripe Payment Start here ==============
   const stripePromise = loadStripe(
     process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
   );
-
+  const { data: session } = useSession();
   const handleCheckout = async () => {
+    const stripe = await stripePromise;
     const response = await fetch("http://localhost:3000/api/checkout", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -38,14 +37,17 @@ const PaymentForm = () => {
         email: session?.user?.email,
       }),
     });
-    const data=await response.json()
-    if(response.ok){
-    console.log(data)
-    await dispatch(saveOrder({order:productData,id:data.id}))
-    stripe?.redirectToCheckout({sessionId:data.id})
-    dispatch(resetOrder())
+    const data = await response.json();
+
+    if (response.ok) {
+      await dispatch(saveOrder({ order: productData, id: data.id }));
+      stripe?.redirectToCheckout({ sessionId: data.id });
+      dispatch(resetOrder());
+    } else {
+      throw new Error("Failed to create Stripe Payment");
     }
   };
+  // =============  Stripe Payment End here ================
   return (
     <div className="w-full bg-white p-4">
       <h2>Cart Totals</h2>

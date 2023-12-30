@@ -27,15 +27,15 @@ const Banner = () => {
     <div className="relative px-8">
     <Slider {...settings}>
     <div className="relative">
-      <Image src={bannerone} alt="banner-1"  className="w-full h-full relative"  />
+      <Image src={bannerone} alt="banner-1"  className="w-full h-full relative" priority />
       <BannerText title='Outfit For Everyone'/>
       </div>
       <div className="relative">
-      <Image src={bannertwo} alt="banner-1" className="w-full h-full relative overflow-hidden object-contain" />
+      <Image src={bannertwo} alt="banner-1" className="w-full h-full relative overflow-hidden object-contain" priority/>
       <BannerText title='Outfit For Everyone'/>
       </div>
       <div className="relative">
-      <Image src={bannerthree} alt="banner-1" className="w-full h-full relative" />
+      <Image src={bannerthree} alt="banner-1" className="w-full h-full relative" priority/>
       <BannerText title='Outfit For Everyone'/>
       </div>
 
