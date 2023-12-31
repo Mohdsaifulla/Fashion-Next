@@ -1,18 +1,25 @@
 import { createSlice } from "@reduxjs/toolkit";
-import type { PayloadAction } from "@reduxjs/toolkit";
-import { ProductWithQuant } from "../../type";
+import { ProductWithQuant, Products } from "../../type";
+import {ProductProps } from "../../type";
+
 
 
 interface productState {
   productData: ProductWithQuant[];
+  singleProducts:ProductWithQuant | null;
   loginDetails: null | string;
-  orderData:[]
+  orderData:{
+    order:ProductWithQuant[]
+  };
 }
 
 const initialState: productState = {
   productData: [],
+  singleProducts:null,
   loginDetails: null,
-  orderData:[]
+  orderData:{
+    order:[]
+  },
 };
 
 export const storeSlice = createSlice({
@@ -62,11 +69,14 @@ export const storeSlice = createSlice({
     deleteUserInfo: (state) => {
       state.loginDetails = null;
     },
-    saveOrder:(state,action)=>{
-      state.orderData=action.payload
+    saveOrder: (state, action) => {
+      state.orderData = action.payload;
     },
-    resetOrder:(state)=>{
-      state.orderData=[]
+    resetOrder: (state) => {
+      state.orderData.order = [];
+    },
+    singleProductSlice:(state,action)=>{
+      state.singleProducts=action.payload
     }
   },
 });
@@ -78,6 +88,8 @@ export const {
   removeAllItem,
   userInfoAdded,
   deleteUserInfo,
-  saveOrder,resetOrder
+  saveOrder,
+  resetOrder,
+  singleProductSlice
 } = storeSlice.actions;
 export default storeSlice.reducer;

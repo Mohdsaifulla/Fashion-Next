@@ -22,7 +22,7 @@ const PaymentForm = () => {
     setTotalAmt(amt);
   }, [productData]);
 
-  // =============  Stripe Payment Start here ==============
+
   const stripePromise = loadStripe(
     process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
   );
@@ -40,14 +40,13 @@ const PaymentForm = () => {
     const data = await response.json();
 
     if (response.ok) {
-      await dispatch(saveOrder({ order: productData, id: data.id }));
+      await dispatch(saveOrder({order:productData,id:data.id }));
       stripe?.redirectToCheckout({ sessionId: data.id });
-      dispatch(resetOrder());
     } else {
       throw new Error("Failed to create Stripe Payment");
     }
   };
-  // =============  Stripe Payment End here ================
+
   return (
     <div className="w-full bg-white p-4">
       <h2>Cart Totals</h2>

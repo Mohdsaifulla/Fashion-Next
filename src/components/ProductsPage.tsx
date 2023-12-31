@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { ProductProps } from "../../type";
+import { ProductProps, ProductWithQuant } from "../../type";
 import Image from "next/image";
 import { calculatedPercentage } from "@/fetchData";
 import FormattedPrice from "./FormattedPrice";
@@ -9,6 +9,7 @@ import Link from "next/link";
 import { useSelector, useDispatch } from "react-redux";
 import { addToCart } from "@/reduxToolkit/storeSlice";
 import type { RootState } from "@/reduxToolkit/store";
+import { singleProductSlice } from "@/reduxToolkit/storeSlice";
 const ProductsPage = ({ item }: ProductProps) => {
   const count = useSelector((state: RootState) => state.fashion.productData);
   const dispatch = useDispatch();
@@ -17,24 +18,31 @@ const ProductsPage = ({ item }: ProductProps) => {
       <CiStar />
     </span>
   ));
+
+  const handleLinkClick = () => {
+    dispatch(
+      singleProductSlice({
+        _id: item._id,
+        title: item.title,
+        isNew: item.isNew,
+        oldPrice: item.oldPrice,
+        price: item.price,
+        description: item.description,
+        category: item.category,
+        image: item.image,
+        rating: item.rating,
+        quantity: 1,
+      })
+    );
+  };
   return (
     <div className="w-full rounded-lg overflow-hidden">
       <div>
         <Link
           href={{
             pathname: "/product",
-            query: {
-              _id: item._id,
-              title: item.title,
-              isNew: item.isNew,
-              oldPrice: item.oldPrice,
-              price: item.price,
-              description: item.description,
-              category: item.category,
-              image: item.image,
-              rating: item.rating,
-            },
           }}
+          onClick={handleLinkClick}
         >
           <div className=" w-full h-96 group overflow-hidden relative">
             <Image
