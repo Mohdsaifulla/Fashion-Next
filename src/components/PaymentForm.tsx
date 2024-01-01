@@ -6,12 +6,14 @@ import FormattedPrice from "./FormattedPrice";
 import { useEffect, useState } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import { useSession } from "next-auth/react";
-import { saveOrder,resetOrder} from "@/reduxToolkit/storeSlice";
+import { saveOrder, resetOrder } from "@/reduxToolkit/storeSlice";
 import type { RootState } from "@/reduxToolkit/store";
 const PaymentForm = () => {
   const dispatch = useDispatch();
 
-  const { productData,loginDetails  } = useSelector((state: RootState) => state.fashion);
+  const { productData, loginDetails } = useSelector(
+    (state: RootState) => state.fashion
+  );
   const [totalAmt, setTotalAmt] = useState(0);
   useEffect(() => {
     let amt = 0;
@@ -22,25 +24,27 @@ const PaymentForm = () => {
     setTotalAmt(amt);
   }, [productData]);
 
-
   const stripePromise = loadStripe(
     process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
   );
   const { data: session } = useSession();
   const handleCheckout = async () => {
     const stripe = await stripePromise;
-    const response = await fetch("http://localhost:3000/api/checkout", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        items: productData,
-        email: session?.user?.email,
-      }),
-    });
+    const response = await fetch(
+      "https://fashion-next-hazel.vercel.app/api/checkout",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          items: productData,
+          email: session?.user?.email,
+        }),
+      }
+    );
     const data = await response.json();
 
     if (response.ok) {
-      await dispatch(saveOrder({order:productData,id:data.id }));
+      await dispatch(saveOrder({ order: productData, id: data.id }));
       stripe?.redirectToCheckout({ sessionId: data.id });
     } else {
       throw new Error("Failed to create Stripe Payment");
