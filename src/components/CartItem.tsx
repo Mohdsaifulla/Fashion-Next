@@ -7,7 +7,7 @@ import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { increaseQuant,decreaseQuant,deleteOneItem } from "@/reduxToolkit/storeSlice";
 import FormattedPrice from "./FormattedPrice";
 import type { RootState } from "@/reduxToolkit/store";
-
+import toast, { Toaster } from "react-hot-toast";
 const CartItem = () => {
     const { productData } = useSelector((state: RootState) => state.fashion);
   const dispatch = useDispatch();
@@ -27,7 +27,9 @@ const CartItem = () => {
           >
             <div className="flex items-center gap-x-3 w-full md:w-1/3">
               <span
-                onClick={() => dispatch(deleteOneItem(item?._id))}
+                onClick={() => dispatch(deleteOneItem(item?._id))&& toast.success(
+                  `${item?.title.substring(0, 15)} Removed successfully!🥺`
+                )}
                 className="text-lg hover:text-red-600 cursor-pointer duration-200"
               >
                 <AiOutlineClose />
@@ -68,6 +70,7 @@ const CartItem = () => {
           </div>
         ))}
       </div>
+      <Toaster />
     </div>
   );
 };

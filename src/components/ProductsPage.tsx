@@ -10,6 +10,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { addToCart } from "@/reduxToolkit/storeSlice";
 import type { RootState } from "@/reduxToolkit/store";
 import { singleProductSlice } from "@/reduxToolkit/storeSlice";
+import toast, { Toaster } from "react-hot-toast";
 const ProductsPage = ({ item }: ProductProps) => {
   const count = useSelector((state: RootState) => state.fashion.productData);
   const dispatch = useDispatch();
@@ -50,7 +51,8 @@ const ProductsPage = ({ item }: ProductProps) => {
               height={500}
               width={500}
               alt="Product"
-              className="w-full h-full object-cover group-hover:scale-110 duration-200 rounded-lg priority"
+              className="w-full h-full object-cover group-hover:scale-110 duration-200 rounded-lg"
+              priority
             />
 
             {item?.isNew && (
@@ -92,6 +94,9 @@ const ProductsPage = ({ item }: ProductProps) => {
                     rating: item.rating,
                     quantity: 1,
                   })
+                ) &&
+                toast.success(
+                  `${item?.title.substring(0, 15)} added successfully!😀`
                 )
               }
             >
@@ -101,6 +106,7 @@ const ProductsPage = ({ item }: ProductProps) => {
           </div>
         </div>
       </div>
+      <Toaster />
     </div>
   );
 };
