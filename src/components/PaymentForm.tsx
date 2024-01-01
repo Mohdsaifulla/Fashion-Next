@@ -6,7 +6,7 @@ import FormattedPrice from "./FormattedPrice";
 import { useEffect, useState } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import { useSession } from "next-auth/react";
-import { saveOrder, resetOrder } from "@/reduxToolkit/storeSlice";
+import { saveOrder, resetOrder ,removeAllItem} from "@/reduxToolkit/storeSlice";
 import type { RootState } from "@/reduxToolkit/store";
 const PaymentForm = () => {
   const dispatch = useDispatch();
@@ -46,6 +46,7 @@ const PaymentForm = () => {
     if (response.ok) {
       await dispatch(saveOrder({ order: productData, id: data.id }));
       stripe?.redirectToCheckout({ sessionId: data.id });
+      dispatch(removeAllItem());
     } else {
       throw new Error("Failed to create Stripe Payment");
     }
